@@ -25,7 +25,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    //await client.connect();
     
     const toycollection = client.db('toyDB').collection('marvels');
 
@@ -41,8 +41,14 @@ async function run() {
       res.send(result);
     });
 
-    const queryMarvel = { subCategory: "Marvel" };
+    app.get("/marvels/subCategory/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await toycollection.findOne(query);
+      res.send(result);
+    });
 
+    const queryMarvel = { subCategory: "Marvel" };
     app.get("/marvels/subCategory/marvel", async (req, res) => {
       const cursor = toycollection.find(queryMarvel).limit(2);
       const result = await cursor.toArray();
@@ -63,14 +69,8 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/marvels/subCategory/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await toycollection.findOne(query);
-      res.send(result);
-    });
 
-    app.post("/details", async (req, res) => {
+    app.post("/marvels", async (req, res) => {
       const addToy = req.body;
       const result = await toycollection.insertOne(addToy);
       res.send(result);
