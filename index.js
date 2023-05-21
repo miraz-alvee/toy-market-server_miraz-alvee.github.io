@@ -41,11 +41,34 @@ async function run() {
       res.send(result);
     });
 
+    const queryMarvel = { subCategory: "Marvel" };
+
+    app.get("/marvels/subCategory/marvel", async (req, res) => {
+      const cursor = toycollection.find(queryMarvel).limit(2);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    const queryAvengers = { subCategory: "Avengers" };
+    app.get("/marvels/subCategory/avengers", async (req, res) => {
+      const cursor = toycollection.find(queryAvengers).limit(2);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    const queryTransformer = { subCategory: "Transformer" };
+    app.get("/marvels/subCategory/transformer", async (req, res) => {
+      const cursor = toycollection.find(queryTransformer).limit(2);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
     app.post("/details", async (req, res) => {
       const addToy = req.body;
       const result = await toycollection.insertOne(addToy);
       res.send(result);
     });
+
+
 
 
     // Send a ping to confirm a successful connection
