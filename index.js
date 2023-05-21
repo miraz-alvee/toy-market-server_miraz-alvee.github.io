@@ -30,11 +30,22 @@ async function run() {
     const toycollection = client.db('toyDB').collection('marvels');
 
     app.get('/marvels',async(req,res)=>{
-        const cursor = toycollection.find();
+        const cursor = toycollection.find().limit(20);
         const result = await cursor.toArray();
         res.send(result);
     })
 
+    app.get("/myToys/:email", async (req, res) => {
+      console.log(req.params.email);
+      const result = await toycollection.find({ sellerEmail: req.params.email }).toArray();
+      res.send(result);
+    });
+
+    app.post("/details", async (req, res) => {
+      const addToy = req.body;
+      const result = await toycollection.insertOne(addToy);
+      res.send(result);
+    });
 
 
     // Send a ping to confirm a successful connection
@@ -52,6 +63,7 @@ run().catch(console.dir);
 app.get('/',(req,res)=>{
     res.send('toy is running')
 })
+
 
 app.listen(port,()=>{
     console.log(`toy is running on this port ${port}`)
